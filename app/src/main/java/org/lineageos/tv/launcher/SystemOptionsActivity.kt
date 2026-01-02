@@ -26,7 +26,7 @@ import android.text.SpannableString
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.view.WindowManagerGlobal
+//import android.view.WindowManagerGlobal
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -106,19 +106,19 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
         notificationsVerticalGridView.adapter = notificationAdapter
 
         if (AppManager.isSystemApp(this)) {
-            sleepMaterialButton.setOnClickListener {
-                val pm: PowerManager = getSystemService(PowerManager::class.java) as PowerManager
-                pm.goToSleep(
-                    SystemClock.uptimeMillis(),
-                    PowerManager.GO_TO_SLEEP_REASON_POWER_BUTTON,
-                    0
-                )
-            }
-
-            powerMaterialButton.setOnClickListener {
-                val wm = WindowManagerGlobal.getWindowManagerService()
-                wm?.showGlobalActions()
-            }
+//            sleepMaterialButton.setOnClickListener {
+//                val pm: PowerManager = getSystemService(PowerManager::class.java) as PowerManager
+//                pm.goToSleep(
+//                    SystemClock.uptimeMillis(),
+//                    PowerManager.GO_TO_SLEEP_REASON_POWER_BUTTON,
+//                    0
+//                )
+//            }
+//
+//            powerMaterialButton.setOnClickListener {
+//                val wm = WindowManagerGlobal.getWindowManagerService()
+//                wm?.showGlobalActions()
+//            }
         } else {
             sleepMaterialButton.visibility = View.GONE
             powerMaterialButton.visibility = View.GONE
