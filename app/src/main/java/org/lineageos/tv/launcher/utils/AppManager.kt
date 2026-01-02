@@ -9,12 +9,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.ApplicationInfo.FLAG_SYSTEM
+import android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
 import android.net.Uri
 import androidx.preference.PreferenceManager
 import org.lineageos.tv.launcher.ext.favoriteApps
 import org.lineageos.tv.launcher.model.LeanbackAppInfo
 
-import com.android.settingslib.Utils as SettingsLibUtils
+//import com.android.settingslib.Utils as SettingsLibUtils
 
 object AppManager {
     fun updateFavoriteApps(context: Context, installedApps: List<LeanbackAppInfo>) {
@@ -61,11 +62,23 @@ object AppManager {
     }
 
     fun uninstallable(app: ApplicationInfo, context: Context): Boolean {
-        return !isSystemApp(context) && !app.isSignedWithPlatformKey && !SettingsLibUtils.isEssentialPackage(
-            context.resources,
-            context.packageManager,
-            app.packageName
-        )
+//        return !isSystemApp(context) && !app.isSignedWithPlatformKey && !SettingsLibUtils.isEssentialPackage(
+//            context.resources,
+//            context.packageManager,
+//            app.packageName
+//        )
+        if ((app.flags and FLAG_SYSTEM) != 0) {
+            if ((app.flags and FLAG_UPDATED_SYSTEM_APP) != 0) {
+                return true
+            }
+            return false
+        }
+
+        if (app.packageName == context.packageName){
+            return  false
+        }
+
+        return true
     }
 
     fun isSystemApp(context: Context): Boolean {
