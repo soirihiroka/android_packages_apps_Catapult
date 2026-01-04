@@ -27,7 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       # Removed './gradlew build' to bypass strict Lint checks
-      - name: Build Debug APK
+      - name: Build APK
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
