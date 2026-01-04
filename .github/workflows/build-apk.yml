@@ -1,4 +1,4 @@
-name: Build APK
+name: Build and Auto-Release APK
 
 on: 
   push:
@@ -7,6 +7,10 @@ on:
   pull_request: 
     branches:
       - lineage-23.0
+
+# Required to allow the runner to create releases and upload files
+permissions:
+  contents: write
 
 jobs:
   build: 
@@ -26,20 +30,29 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Removed './gradlew build' to bypass strict Lint checks
       - name: Build APK
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Upload APK
+      # Optional: Keeps the APK in the Actions tab for 90 days
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
-        if: success()
         with:
-          name: Catapult-Debug-APK
+          name: Catapult-Build-${{ github.run_number }}
           path: app/build/outputs/apk/debug/*.apk
 
-      - name: Upload Build Reports (If failed)
-        uses: actions/upload-artifact@v4
-        if: failure()
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' && github.ref == 'refs/heads/lineage-23.0'
         with:
-          name: build-reports
-          path: app/build/reports/
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          body: |
+            ### Automated Build
+            - **Branch:** ${{ github.ref_name }}
+            - **Commit:** ${{ github.sha }}
+            - **Build Number:** ${{ github.run_number }}
+          files: app/build/outputs/apk/debug/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
